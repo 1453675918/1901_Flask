@@ -5,4 +5,10 @@ app = Flask(__name__)
 
 def index():
 
-    return '<h1>hello Flask</h1>'
+    return '<h1>hello Flask 111</h1>'
+
+
+# 动态路由
+@app.route('/index/<name>')
+def home(name):
+    return '<h1>hello %s</h1>'%name
