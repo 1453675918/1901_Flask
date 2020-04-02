@@ -32,20 +32,19 @@ class Movie(db.Model):
     year = db.Column(db.String(4))
 
 
+# 模板上下文处理函数
+@app.context_processor
+def common_user():
+    user = User.query.first()
+    return dict(user=user)
+
+
 # views
 @app.route('/')
 def index():
-
-    name = 'Erfei'
-    movies = [
-        {'title': '大赢家', 'year': '2020'},
-        {'title': '海贼王-顶上战争', 'year': '2019'},
-        {'title': '囧妈', 'year': '2020'},
-        {'title': '速度与激情8', 'year': '2019'},
-        {'title': '战狼', 'year': '2019'},
-    ]
-
-    return render_template('index.html', name=name, movies=movies)
+    user = User.query.first()
+    movies = Movie.query.all()
+    return render_template('index.html', user=user, movies=movies)
 
 
 # 自定义命令
@@ -56,6 +55,37 @@ def initdb(drop):
         db.drop_all()
     db.create_all()
     click.echo('初始化数据库完成')
+
+
+# 初始化数据库
+@app.cli.command()
+def forge():
+    name = 'erfei'
+    movies = [
+        {'title': '大赢家', 'year': '2020'},
+        {'title': '海贼王-顶上战争', 'year': '2019'},
+        {'title': '囧妈', 'year': '2020'},
+        {'title': '速度与激情8', 'year': '2019'},
+        {'title': '战狼', 'year': '2019'},
+    ]
+    user = User(name=name)
+    db.session.add(user)
+    for m in movies:
+        movie = Movie(title=m['title'],year=m['year'])
+        db.session.add(movie)
+    db.session.commit()
+    click.echo('导入数据库')
+
+# 错误处理函数
+@app.errorhandler(404)
+def page_not_found(e):
+    user = User.query.first()
+    # 返回模板和状态码
+    return render_template('404.html',user=user)
+
+
+
+
 
 
 # # 动态路由
