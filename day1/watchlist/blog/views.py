@@ -1,4 +1,4 @@
-from flask import redirect, render_template, flash, request
+from flask import redirect, render_template, flash, request,url_for
 from blog import db,app
 from blog.models import User, Movies
 from flask_login import LoginManager, login_required, current_user, logout_user, login_user
@@ -22,25 +22,25 @@ def index():
             
     movies = Movies.query.all()
     return render_template('index.html', movies=movies)
-@app.route('/delete/<int:movie_id>', methods=['GET', 'POST'])
+@app.route('/delete/<int:movies_id>', methods=['GET', 'POST'])
 @login_required
-def delete(movie_id):
-    movie = Movies.query.get_or_404(movie_id)
+def delete(movies_id):
+    movie = Movies.query.get_or_404(movies_id)
     db.session.delete(movie)
     db.session.commit()
     flash('删除数据成功')
     return redirect(url_for('index'))
 
-@app.route('/edit/<int:movie_id>', methods=['GET','POST'])
+@app.route('/edit/<int:movies_id>', methods=['GET','POST'])
 @login_required
-def edit(movie_id):
-    movie = Movies.query.get_or_404(movie_id)
+def edit(movies_id):
+    movie = Movies.query.get_or_404(movies_id)
     if request.method == 'POST':
         title = request.form['title']
         year = request.form['year']
         if not title or not year or len(title) > 20 or len(year) > 4:
             flash('输入错误')
-            return redirect(url_for('edit'), movie = movie)
+            return redirect(url_for('edit'), movie_id = movies_id)
         
         movie.title = title
         movie.year = year
