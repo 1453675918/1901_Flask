@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HTML,CSS,JavaScript,JQuery,BootStrap购物车</title>
+    <title>通过HTML,CSS,JavaScript,jQuery,Bootstrap实现购物车</title>
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container{
-            width: 40%;
+            width: 50%;
             margin: 100px auto;
         }
         .removed{
-            color: grey;
+            color: grey;    
         }
+
         .removed label{
             text-decoration: line-through;
         }
@@ -27,15 +27,21 @@
     </style>
 </head>
 <body>
+    
     <div class="container">
+        
         <h2>我的购物车清单</h2>
-        <!-- 输入框，添加按钮 -->
+        <!-- 输入框 添加按钮 js-new-item 自定义的-->
         <div class="input-group">
             <input type="text" class="js-new-item form-control" placeholder="添加想要购买的商品">
             <span class="input-group-btn">
-                <button type="button" class="js-add btn btn-default">添加到购物车</button>
+                <button  type="button" class="js-add btn btn-default">
+                    添加到购物车
+                </button>
             </span>
         </div>
+
+
         <!-- 无序列表 -->
         <ul>
             <li>
@@ -60,36 +66,52 @@
                 </div>
             </li>
         </ul>
+        <!--改变标题 -->
+        <div class="footer">
+            <hr>
+            <span>改变标题</span>
+            <input type="text" value="我的购物车清单" class="js-change-titile">
+        </div>
     </div>
 </body>
-
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-
 <script>
-    // 等待所有的html元素加载完成之后再执行
+    // 等待所有的HTML元素加载完成后再去执行
     $(document).ready(function(){
         function onAdd(){
             var $ul,$li,$label,$div,value;
-            value = $('.js-new-item').val();
-            if(value === ''){
+            value = $('.js-new-item').val()
+            if(value===''){
                 return;
-            };
+            }
             $ul = $('ul');
+            // 创建加尖括号
             $li = $('<li>').appendTo($ul);
             $div = $('<div>').addClass('checkbox').appendTo($li);
             $label = $('<label>').appendTo($div);
-            $('<input>').addClass('js-item').attr('type','checkbox').appendTo($label).click(toggleRemoved);
-            $label.append(value);
-            $('.js-new-item').val('');
-        };
+            $('<input>').addClass('js-item').attr('type','checkbox').appendTo($label).click(toggleRemoved)
+            // console.log(value)
+            
+            $label.append(value)
+            $('.js-new-item').val('')
+        }
 
         function toggleRemoved(ev){
             $(ev.currentTarget).closest('li').toggleClass('removed');
         }
 
-        $('.js-add').click(onAdd);
+        function  onChangeTitle(){
+            $('h2').text($('.js-change-titile').val())
+        }
+
+        $('.js-add').click(onAdd)
         $('.js-item').click(toggleRemoved)
+
+        $('.js-change-titile').keyup(onChangeTitle)
+
     })
 </script>
+
+
 
 </html>
